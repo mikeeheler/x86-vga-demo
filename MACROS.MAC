@@ -1,0 +1,67 @@
+%ifndef MACROS_MAC
+%define MACROS_MAC
+
+%macro  beginfunc 0
+    push    bp
+    mov     bp,sp
+%endmacro
+
+%macro  beginfunc 1
+    push    bp
+    mov     bp,sp
+    sub     sp,%1
+%endmacro
+
+%macro  endfunc 0
+    mov     sp,bp
+    pop     bp
+    ret
+%endmacro
+
+%macro  endfunc 1
+    mov     sp,bp
+    pop     bp
+    ret     %1
+%endmacro
+
+%macro  comstub 2
+
+[bits    %1]
+[cpu     %2]
+[global  _start]
+[org     0100h]
+
+[section .text]
+_start:
+    call    main
+    mov     ah,0x4C
+    int     0x21
+
+%endmacro
+
+%macro  cout 1
+
+    mov     ah,9
+    mov     dx,%1
+    int     0x21
+
+%endmacro
+
+%macro  println 0
+
+    mov     ah,6
+    mov     dl,0x0D
+    int     0x21
+    mov     dl,0x0A
+    int     0x21
+
+%endmacro
+
+%macro  println 1
+
+    cout %1
+    println
+
+%endmacro
+
+%endif ; MACROS_MAC
