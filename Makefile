@@ -6,10 +6,10 @@ VGA_DEMO_OBJS=$(VGA_DEMO_SRCS:%.ASM=%.OBJ)
 all: VGA_DEMO.EXE
 
 clean:
-    del /F *.EXE *.OBJ
+	del /F *.EXE *.OBJ
 
 VGA_DEMO.EXE: $(VGA_DEMO_OBJS)
-    ../ALINK/ALINK.EXE -oEXE -o $@ $(VGA_DEMO_OBJS)
+	../ALINK/ALINK.EXE -oEXE -o $@ $(VGA_DEMO_OBJS)
 
-%.OBJ: %.ASM
-    nasm -fobj -gborland -I. -o $@ $<
+%.OBJ: %.ASM VGA_DEFS.INC
+	nasm -fobj -gborland -I. -o $@ $<

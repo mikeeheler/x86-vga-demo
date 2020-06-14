@@ -16,7 +16,7 @@ top_left        resw    1
 
 [segment data]
 
-vga_esdi        dw      0,VGA_SEGMENT
+vga_esdi        dw      0,VGA_MEM_SEGMENT
 
 
 [segment code]
@@ -61,6 +61,7 @@ _vga_set_active_color:
 
 [global _vga_get_blink]
 _vga_get_blink:
+    call    vga_crtc_get_blink
     mov     al,VGA_BLINK_MASK
     call    vga_get_attr
     shr     al,VGA_BLINK_BIT
