@@ -1,44 +1,37 @@
-extern vga_get_cursor_state, vga_set_cursor_state
+extern  vga_init, vga_shutdown
+
 
 [segment code]
 
 ..start:
     mov     ax,data
     mov     ds,ax
+    mov     es,ax
+    mov     di,0
+    mov     si,0
 
-    call    vga_get_cursor_state
-    push    ax
-    call    print_cursor_msg
+    call    vga_init
+    cmp     al,0
+    jne     .error_return
 
-    mov     al,0
-    call    vga_set_cursor_state
-    call    vga_get_cursor_state
-    call    print_cursor_msg
-
-    pop     ax
-    call    vga_set_cursor_state
-    call    vga_get_cursor_state
-    call    print_cursor_msg
+    call    vga_shutdown
 
     mov     ax,0x4C00
-    int     0x21
-
-print_cursor_msg:
-    cmp     al,0
-    je      .cursor_off
-    mov     dx,cursor_on_msg
-    jmp     .print_msg
-.cursor_off:
-    mov     dx,cursor_off_msg
-.print_msg:
-    mov     ah,9
     int     21h
-    ret
+
+.error_return:
+    mov     ah,9
+    mov     dx,vga_init_failed_state
+    int     21h
+
+    mov     ax,0x4C01
+    int     21h
 
 
 [segment data]
-cursor_off_msg  db  'Cursor is disabled.',0x0D,0x0A,'$'
-cursor_on_msg   db  'Cursor is enabled.',0x0D,0x0A,'$'
+
+vga_init_failed_state   db      'ERROR: VGA init failed.',13,10,'$'
+
 
 [segment stack stack]
     resb    0xffff

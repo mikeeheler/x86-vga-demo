@@ -15,6 +15,9 @@
 %endmacro
 
 
+FALSE                           equ     0
+TRUE                            equ     1
+
 VGA_MEM_SEGMENT                 equ     0xB800
 
 VGA_ATTRIB_ADDR_READ_PORT       equ     0x03C0
